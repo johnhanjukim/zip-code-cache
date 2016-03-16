@@ -1,0 +1,144 @@
+<html> <head>
+<title>Zip Code Data Sources</title>
+</head>
+
+<body bgcolor="IVORY">
+<h1>Zip Code Data Sources</h1>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;
+The data sources for the zip code information here comes from the
+U.S. Census Bureau's "U.S. Gazetteer" files.  These include a
+central latitude and longitude for each zip code.  There are several
+differences between the two data sets, which the Census Bureau says
+they have no plans to document.  From what I can gather, there were a
+number of zip codes which were eliminated from the 2000 data --
+primarily corporate zip codes and P.O. boxes.  In addition, the
+formula for longitude and latitude seems to have been updated (and
+presumably improved).  
+</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;
+I use the 2000 data but also include zip codes found in the 1990 data
+which were eliminated from the 2000 data set.
+</p>
+
+<hr><!----------------------------------------------------------->
+<a href="http://www.census.gov/geo/www/gazetteer/places2k.html">
+<h2>Census 2000 Gazeteer Files</h2></a>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;
+The ZCTA file contains data for all 5 digit ZCTAs in the 50 states,
+District of Columbia and Puerto Rico as of Census 2000.
+It includes 33,233 such ZCTA's -- though 1152 of these are
+special "XX" and "HH" codes for land and hydrographic areas not
+covered by standard zipcodes.  Thus there are 32,081 zipcodes
+included.  The file is plain ASCII text, one line per record.
+<ul>
+  <li> 
+  <li> Columns 1-2: United States Postal Service State Abbreviation 
+  <li> Columns 3-66: Name 
+  <li> Columns 67-75: Total Population (2000) 
+  <li> Columns 76-84: Total Housing Units (2000) 
+  <li> Columns 85-98: Land Area (square meters) 
+  <li> Columns 99-112: Water Area (square meters) 
+  <li> Columns 113-124: Land Area (square miles) 
+  <li> Columns 125-136: Water Area (square miles) 
+  <li> Columns 137-146: Latitude (millionths of a degree) <br>
+       The first character is blank or "-" denoting North or South
+       latitude respectively.  
+  <li> Columns 147-157: Longitude (millionths of a degree) <br>
+       The first character is blank or "-" denoting East or West
+       longitude respectively.  
+</ul>
+</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;
+The place file contains data for all Incorporated and Census
+Designated places in the 50 states, the District of Columbia and
+Puerto Rico as of the January 1, 2000. The file is plain ASCII text,
+one line per record. 
+<ul>
+  <li> Columns 1-2: United States Postal Service State Abbreviation </li>
+  <li> Columns 3-4: State Federal Information Processing Standard (FIPS) code </li>
+  <li> Columns 5-9: Place FIPS Code </li>
+  <li> Columns 10-73: Name <br>
+       This includes the place name generally ending with a place type : 
+       city, CDP, town, village, or borough ("zona urbana" or "comunidad"
+       in Puerto Rico). </li>
+  <li> Columns 74-82: Total Population (2000) </li>
+  <li> Columns 83-91: Total Housing Units (2000) </li>
+  <li> Columns 92-105: Land Area (square meters) </li>
+  <li> Columns 106-119: Water Area(square meters) </li>
+  <li> Columns 120-131: Land Area (square miles) </li>
+  <li> Columns 132-143: Water Area (square miles) </li>
+  <li> Columns 144-153: Latitude (decimal degrees) <br>
+       First character is blank or "-" denoting North or South
+       latitude respectively </li>
+  <li> Columns 154-164: Longitude (decimal degrees) <br>
+       First character is blank or "-" denoting East or West longitude
+       respectively </li>
+</ul>
+</p>
+
+<!-- cf also -->
+<!-- http://geonames.usgs.gov/pls/gnis/web_query.gnis_web_query_form -->
+<!-- -->
+
+<hr><!----------------------------------------------------------->
+<a href="http://www.census.gov/geo/www/tiger/zip1999.html">
+<h2>Census 1999 Tiger Zipcode Files</h2></a>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;
+This is a data set of zip codes from the 1999 census.  It includes
+zip codes from all 50 states, District of Columbia and Puerto Rico.
+The zip codes include 9749 P.O. boxes and 29915 unique zips assigned
+to large corporations or government agencies, but it excludes APO/FPO
+military zip codes.  There are a total of 42,192 zip codes (including
+29,915 non-P.O., non-unique codes).  The original files is a DBF
+format dBase file, but I have converted it to an SQL dump file and
+ASCII text format.  
+</p>
+
+<ul>
+  <li> Zip Code </li>
+  <li> Latitude, including 6 decimal places </li>
+  <li> Longitude, including 6 decimal places </li>
+  <li> Zip Class: <br>
+       "M" for APO/FPO military zip (none), "P" for P.O. box,
+       "U" for unique zip assigned to large corporations or government
+       agencies, and blank for non-unique zips. </li>
+  <li> State FIPS Code </li>
+  <li> County FIPS Code <br>
+       For zip codes which cross county boundaries, the Post Office
+       file assigns that zip code to just one of the counties rather
+       than each county. </li>
+  <li> IDMARPLOT <br>
+       A variable used by the LandView4 program. </li>
+</ul>
+
+<hr><!----------------------------------------------------------->
+<a href="http://ftp.census.gov/geo/www/gazetteer/places.html">
+<h2>Census 1990 Gazeteer Files</h2></a>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;
+The 1990 Zip Code by State file is comma separated values, ASCII text, 
+one record per line.  It includes 29470 zip codes.  The field/record
+layout is as follows: 
+<ul>
+  <li> Field 1 - State Fips Code 
+  <li> Field 2 - 5-digit Zipcode 
+  <li> Field 3 - State Abbreviation 
+  <li> Field 4 - Zipcode Name 
+  <li> Field 5 - Longitude in Decimal Degrees (West is assumed, no minus sign) 
+  <li> Field 6 - Latitude in Decimal Degrees (North is assumed, no plus sign) 
+  <li> Field 7 - 1990 Population (100%) 
+  <li> Field 8 - Allocation Factor (decimal portion of state within zipcode) 
+</ul>
+</p>
+
+<hr>
+<address>John H. Kim &lt;jhkim@darkshire.net&gt;</address>
+<!-- hhmts start -->
+Last modified: Mon Jul  1 17:57:17 2002
+<!-- hhmts end -->
+</body> </html>

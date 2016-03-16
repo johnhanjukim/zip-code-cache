@@ -1,0 +1,34 @@
+Places, for the reporting of decennial census data, include census
+designated places, consolidated cities, and incorporated places.  
+Each place is assigned a five-digit Federal Information Processing
+Standards (FIPS) code, based on the alphabetical order of the place
+name within each state.  If place names are duplicated within a state 
+and they represent distinctly different areas, a separate code is 
+assigned to each place name alphabetically by primary county in which 
+each place is located, or if both places are in the same county, 
+alphabetically by their legal description (for example, "city" 
+before "village").  
+
+There are technically six categories of "incorporated place" by the 
+U.S. Census: city, borough, city and borough, municipality, town, 
+and village.  In four states (Maryland, Missouri, Nevada, and 
+Virginia) there are one or more incorporated places known as 
+"independent cities" that are primary divisions of a state and 
+legally not part of any county (i.e. Baltimore City).  Puerto 
+Rico has a different scheme with two categories: "zona urbana" 
+and "comunidad".  
+
+Census designated places (CDP's) are concentrations of population,
+housing, and commercial structures that are identifiable by name but
+are not within an incorporated place.  CDP boundaries may change 
+with each decennial census.  
+
+
+'        city': count 10017, min        0, max  8008278, average    15275
+'         CDP': count  5698, min        0, max   371657, average     5782
+'        town': count  4431, min        0, max   109697, average     1504
+'     village': count  3770, min        0, max    76031, average     2127
+'     borough': count  1225, min        0, max    40377, average     3546
+'   comunidad': count   147, min      673, max    30140, average     2662
+' zona urbana': count    78, min      909, max   421958, average    24118
+'     unknown': count     9, min     5740, max   545524, average   162585

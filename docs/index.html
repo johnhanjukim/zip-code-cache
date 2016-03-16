@@ -1,0 +1,93 @@
+<html> <head>
+<title>Zip Code Mysql Database</title>
+<link rel="stylesheet" href="../main.css" type="text/css">
+</head>
+
+<body bgcolor="IVORY" leftmargin="24" marginwidth="24">
+<!-- begin header -->
+<center>
+<img src="../title-banner.gif" height=90 width=432> <br>
+<small>
+<a href="../index.html"><b>Home</b></a>
+ &#149;
+<a href="../process/"><b>Process</b></a>
+ &#149;
+<a href="../macosx/"><b>Mac&nbsp;OS&nbsp;X</b></a>
+ &#149;
+<a href="../perl/"><b>Perl</b></a>
+ &#149;
+<a href="../java/"><b>Java</b></a>
+ &#149;
+<a href="../javascript/"><b>Javascript</b></a>
+ &#149;
+<a href="../web/"><b>Web&nbsp;Apps</b></a>
+ &#149;
+<a href="../zipcodes/"><b>Zipcodes</b></a>
+ &#149;
+<a href="../mapping/"><b>Mapping</b></a>
+</small>
+</center>
+<!-- end header -->
+<h1>Zip Code Mysql Database</h1>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;
+This is a Mysql database of a host of zip code information, along with
+the scripts used to create it and other utility scripts.  The data is
+based on public domain data made available by the U.S. Census Bureau.
+In addition to this, however, I have added fields for the nearest 30
+and nearest 100 zip codes to each other zip code -- sorted in order of
+proximity.  
+</p>
+
+<blockquote>
+<a href="zipcodes.dump.gz"><b>mysqldump file, gzipped</b></a> (7.1meg)
+</blockquote>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;
+I am in the process of regularizing some of the differences between
+the 1990 and 2000 data.  The 1990 data has additional zip codes -- 
+primarily corporate ones, I gather -- which were eliminated from
+the 2000 data.  The 2000 data, however, has different and presumably
+improved latitude and longitude information.  You can browse the
+merged database using the script below. 
+</p>
+
+<blockquote>
+<a href="lookup.php"><b>zipcode lookup script</b></a> and
+<b>source code</b> in
+<a href="showsource.cgi?file=lookup.cgi">Perl</a>
+and 
+<a href="showsource.cgi?file=lookup.php">PHP</a>
+</blockquote>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;
+Below are links for the code and sources for the database.
+</p>
+
+<ul>
+  <li> <a href="sources.html">
+       <b>Explanation of Sources:</b></a> <br>
+       including the fields and links to the U.S. Census site for the
+       original files. </li>
+  <li> <a href="math.html">
+       <b>Mathematics Discussion:</b></a> <br>
+       including how to calculate distance from latitude and longitude
+       quickly and accurately. </li>
+  <li> <a href="showsource.cgi?file=parse_zips.pl"> 
+       <b>parse_zips.pl</b></a> <br>
+       with the source code in Perl for the  script used to create the
+       database. </li>
+  <li> <a href="showsource.cgi?file=sort_zips.pl"> 
+       <b>sort_zips.pl</b></a> <br>
+       with the source code in Perl for the script used to add in the
+       nearest zip code fields. </li>
+  <li> <a href="links.html">
+       <b>Links</b></a> </li>
+</ul>
+
+<hr>
+<address>John H. Kim &lt;jhkim@darkshire.net&gt;</address>
+<!-- hhmts start -->
+Last modified: Wed Jan 29 11:07:55 2003
+<!-- hhmts end -->
+</body> </html>

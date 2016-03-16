@@ -1,0 +1,151 @@
+<html> <head>
+<title>Calculating from Latitude and Longitude</title>
+<link rel="stylesheet" href="http://www.w3.org/StyleSheets/Core/Steely" type="text/css">
+</head>
+
+<body bgcolor="IVORY">
+<h1>Calculating from Latitude and Longitude</h1>
+
+<h3>By John Kim &lt;john.kim3@gmail.com&gt;</h3>
+
+<p>
+The zip code database provides latitude and longitude for the rough center of each zip code.  The trick is to calculate distance and direction to any other zip code.
+</p>
+
+<hr><!---------------------------------------------------------------->
+<h2>Basics</h2>
+
+<p>
+To start with finding the distance between two points on the globe, we determine the positions of those points in arbitrary coordinates of X, Y, and Z.  Here Z is parallel to the axis of the Earth and X and Y are arbitrarily based on the origin of the longitude system. Assuming the Earth is a sphere, the positions are: 
+<pre>
+Zip Code A is at latitude LatA and longitude LngA
+    x_A = R*cos(LatA)*cos(LngA)
+    y_A = R*cos(LatA)*sin(LngA)
+    z_A = R*sin(LatA)
+
+Zip Code B is at latitude LatB and longitude LngB
+    x_B = R*cos(LatB)*cos(LngB)
+    y_B = R*cos(LatB)*sin(LngB)
+    z_B = R*sin(LatB)
+
+where R is the radius of the Earth.  
+</pre>
+</p>
+
+<p>
+The radius of the Earth is actually not a constant, because the Earth is
+actually an ellipsoid rather than a sphere.  The radius is 0.3% shorter
+at the poles than at the equator, a difference of some 21.3 kilometers.
+For distances within the country, you should use the equatorial radius
+or (if you want to be more precise) the radius at the average latitude
+in question.  
+<pre>
+Radius at the equator = 6378137 meters
+Radius at the poles =   6356752 meters
+
+Radius at any latitude = 6378137 * (1 - 0.0033493*sin(Lat)^2)
+
+Average Radius between two latitudes = 6378137 * (1 - 0.0033493*sin((LatA+LatB)/2)^2)
+</pre>
+</p>
+
+<hr><!---------------------------------------------------------------->
+<h2>Distance</h2>
+
+<p>
+The real distance between the points is the arc along the globe.
+This is based on finding the angle between the two vectors, which is 
+found from the "dot product".  The distance along the arc is equal
+to the angle (in radians) times the radius (using the average radius
+defined above).  If <tt>Ang</tt> is the true angle between the points, 
+</p>
+<pre>
+R*R*cos(Ang) = x_A*x_B + y_A*y_B + z_A*z_B
+
+cos(Ang) = cos(LatA)*cos(LngA)*cos(LatB)*cos(LngB)
+           + cos(LatA)*sin(LngA)*cos(LatB)*sin(LngB)
+           + sin(LatA)*sin(LatB)
+
+cos(Ang) = cos(LatA)*cos(LngA)*cos(LatB)*cos(LngB)
+           + cos(LatA)*sin(LngA)*cos(LatB)*sin(LngB)
+           + sin(LatA)*sin(LatB)
+
+cos(Ang) = cos(LatA)*cos(LatB)*(cos(LngA)*cos(LngB) + sin(LngA)*sin(LngB)) + sin(LatA)*sin(LatB)
+
+distance = radius * Ang
+
+</pre>
+</p>
+
+<p>
+The above calculation works, and is likely to be used by generalized
+packages.  However, by going through some simple math we can simplify
+the calculation so that it can be calculated more accurately and in 
+fewer steps.  
+<pre>
+ [using the general relation cos(a-b)=cos(a)*cos(b)+sin(a)*sin(b)]
+
+cos(Ang) = cos(LatA)*cos(LatB)*(cos(LngA-LngB)) + sin(LatA)*sin(LatB)
+
+cos(Ang) = (cos(LngA-LngB)-1+1)*cos(LatA)*cos(LatB) + sin(LatA)*sin(LatB)
+
+ [use the general relation cos(a-b)=cos(a)*cos(b)+sin(a)*sin(b)]
+
+cos(Ang) = (cos(LngA-LngB)-1)*cos(LatA)*cos(LatB) + cos(LatA)*cos(LatB) + sin(LatA)*sin(LatB)
+
+cos(Ang) = (cos(LngA-LngB)-1)*cos(LatA)*cos(LatB) + cos(LatA-LatB)
+
+Ang = arccos( (cos(LngA-LngB)-1)*cos(LatA)*cos(LatB) + cos(LatA-LatB) )
+</pre>
+</p>
+
+<hr><!---------------------------------------------------------------->
+<h2>Computerized Implementation</h2>
+
+<p>
+The above works fine as a mathematical relation, and it has simplified 
+the number of steps to a fair minimum.  There are two concerns for 
+this as a computerized calculation, though: 
+<ul>
+  <li> For points which are close together on the globe, both
+       <tt>cos(LngA-LngB)</tt> and <tt>cos(LatA-LatB)</tt> are close
+       to 1.  The program only stores a finite number of digits,
+       so if <tt>x</tt> is very small, then <tt>(x+1-1)</tt> may lose 
+       precision compared to the original <tt>x</tt>.  In the above
+       relation, there are two such operations which lose precision.  
+       </li>
+  <li> The above uses many trigonometric operations, which are usually
+       about x4 to x6 times slower than simple arithmatic operations
+       in most programming languages.  If you want to do a lot of
+       calculations, the above can be inefficient. </li>
+</ul>
+</p>
+
+<p>
+The solution for these problems depends on how you are using the
+calculation.  If processsing speed is not important, you can just
+retain a very large number of places to be sure of accuracy.
+However, there is also a good approximation which can be made for
+points which are close together.  
+</p>
+
+<pre>
+For small x, sin(x) ~   x - (x^3/6) + ...
+             cos(x) ~ 1 - (x^2/2) + (x^4/24) - ...
+
+So assuming we keep only the x squared term, this means: 
+
+1 - Ang^2/2 = (1-(LngA-LngB)^2/2-1)*cos(LatA)*cos(LatB) + 1 - (LatA-LatB)^2/2
+
+Ang^2 = cos(LatA)*cos(LatB)*((LngA-LngB)^2) + (LatA-LatB)^2
+
+Ang = sqrt(  cos(LatA)*cos(LatB)*((LngA-LngB)^2) + (LatA-LatB)^2  )
+</pre>
+
+<p>
+The above relation is good up to <tt>x^4</tt> power, which for many 
+purposes is pretty good.  
+</p>
+
+<hr />
+</body> </html>
