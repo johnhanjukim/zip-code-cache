@@ -1,71 +1,32 @@
 package com.darkshire.zipcodecache;
 
 /**
- * Represents lowest-level place and/or zip code data, with only name and location.
+ *  This represents the simplest data on a U.S. place, including only name and state. 
+ *  It is get small to minimize memory use to cache all places. 
  *
  * @author John Kim
  */
-public class Place {
+public class Place extends Location {
 
-    private static final float PI_OVER_180 = ((float) Math.PI) / 180.0f;
-    private static final float EARTH_RADIUS_MILES = 3959f;
-
-    protected String name;
-    protected float lat; // the latitude in radians
-    protected float lng; // the longitude in radians
-
-    private static final float deg2rad(float degrees) { return (degrees * PI_OVER_180); }
-    private static float rad2deg(float radians) { return (radians / PI_OVER_180); }
-
-    public static double exactDistance(Place a, Place b) {
-        double angle = Math.sin(a.lat)* Math.sin(b.lat) +
-            Math.cos(a.lat)*Math.cos(b.lat)*Math.cos(a.lng-b.lng);
-        double exact_distance = 60 * 1.1515 * Math.acos(angle) * 180 / Math.PI;
-        return exact_distance;
-    }
+    public final String name;
+    public final State state;
 
     /**
-     * Create Place with a given name
+     * Create Place with a given name string and State object, with latitude and longitude
      */
-    public Place(String name) {
+    public Place(String name, State state, float latitude, float longitude) {
         this.name = name;
+        this.state = state;
+        this.lat = deg2rad(latitude);
+        this.lng = deg2rad(longitude);
     }
 
-    public float getLatitude() {
-        return rad2deg(this.lat);
-    }
-    public void setLatitude(float degrees) {
-        this.lat = deg2rad(degrees);
-    }
-    public void setLatitude(String s) {
-        setLatitude(Float.parseFloat(s));
-    }
-
-    public float getLongitude() {
-        return rad2deg(this.lng);
-    }
-    public void setLongitude(float degrees) {
-        this.lng = deg2rad(degrees);
-    }
-    public void setLongitude(String s) {
-        setLongitude(Float.parseFloat(s));
-    }
-
-    /**
-     * Returns distance in miles between two zip codes
-     */
-    public float distanceTo(Place o) {
-        float angle = (float) Math.sqrt(
-                                        (float) Math.cos(this.lat) *
-                                        (float) Math.cos(o.lat) *
-                                        ( (this.lat-o.lat)*(this.lat-o.lat) + 
-                                          (this.lng-o.lng)*(this.lng-o.lng) )
-                                        ) * EARTH_RADIUS_MILES;
-        return angle;
+    public int hashCode() {
+        return name.hashCode() + state.hashCode();
     }
 
     public String toString() {
-        return name;
+        return name + ", " + state.abbreviation;
     }
 
 }

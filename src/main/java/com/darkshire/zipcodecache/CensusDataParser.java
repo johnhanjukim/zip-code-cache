@@ -35,30 +35,33 @@ public class CensusDataParser {
         this.zctaFile = zctaFile;
     }
 
-    public void processPlaceLine(Map<String,Place> cache, String line) {
+    public void processPlaceLine(Map<String,Location> cache, String line) {
         String[] fields = line.split("\\t");
         // Fields: 0: USPS, 1: GEOID, 2: ANSICODE, 3: NAME, 4: LSAD, 5: FUNCSTAT,
         // 6: ALAND, 7: AWATER, 8: ALAND_SQMI, 9: AWATER_SQMI, 10: INTPTLAT, 11: INTPTLONG
         // Use standard "<local name>, <state code>" as key
-        String key = PLACE_SUFFIX.matcher(fields[3]).replaceFirst("") + ", " + fields[0];
-        Place place = new Place(key);
-        place.setLatitude(fields[10]);
-        place.setLongitude(fields[11]);
+        String name = PLACE_SUFFIX.matcher(fields[3]).replaceFirst("");
+        State state = State.parse(fields[0]);
+        float latitude = Float.parseFloat(fields[10]);
+        float longitude = Float.parseFloat(fields[11]);
+        Place place = new Place(name, state, latitude, longitude);
+
+        String key = name + ", " + fields[0]; // "Boston, MA"
         cache.put(key, place);
     }
 
-    public void processZctaLine(Map<String,Place> cache, String line) {
+    public void processZctaLine(Map<String,Location> cache, String line) {
         String[] fields = line.split("\\t");
         // Fields:
         // 0: GEOID, 1: ALAND, 2: AWATER, 3: ALAND_SQMI, 4: AWATER_SQMI, 5: INTPTLAT, 6: INTPTLONG
         String key = fields[0];
-        Place place = new Place(key);
-        place.setLatitude(fields[5]);
-        place.setLongitude(fields[6]);
-        cache.put(key, place);
+        float latitude = Float.parseFloat(fields[5]);
+        float longitude = Float.parseFloat(fields[6]);
+        ZipCode zipCode = new ZipCode(key, latitude, longitude);
+        cache.put(key, zipCode);
     }
     
-    public void loadCache(Map<String,Place> cache) throws IOException {
+    public void loadCache(Map<String,Location> cache) throws IOException {
         try (Scanner scanner =  new Scanner(placeFile, ENCODING.name())){
             if (!PLACE_HEADER.equals(scanner.nextLine().trim())) {
                 throw new RuntimeException("Invalid place file header");
@@ -83,18 +86,18 @@ public class CensusDataParser {
             System.exit(0);
         }
         CensusDataParser parser = new CensusDataParser(args[0], args[1]);
-        Map<String,Place> map = new HashMap<String,Place>();
+        Map<String,Location> map = new HashMap<String,Location>();
         try {
             parser.loadCache(map);
             if (args.length >= 3) {
-                Place place1 = map.get(args[2]);
-                System.out.println("PLACE: " + place1 + " (" +place1.getLatitude() + ", " + place1.getLongitude() + ")");
+                Location loc1 = map.get(args[2]);
+                System.out.println("LOC: " + loc1 + " (" +loc1.getLatitude() + ", " + loc1.getLongitude() + ")");
                 if (args.length >= 4) {
-                    Place place2 = map.get(args[3]);
-                    System.out.println("PLACE: " + place2 + " (" +place2.getLatitude() + ", " + place2.getLongitude() + ")");
-                    float d = place1.distanceTo(place2);
+                    Location loc2 = map.get(args[3]);
+                    System.out.println("LOC: " + loc2 + " (" +loc2.getLatitude() + ", " + loc2.getLongitude() + ")");
+                    float d = Location.approximateDistanceMiles(loc1, loc2);
                     System.out.println("DISTANCE: " + d + " miles");
-                    double e = Place.exactDistance(place1, place2);
+                    double e = Location.exactDistanceMiles(loc1, loc2);
                     System.out.println("EXACT DISTANCE: " + e + " miles");
                 }
             }
